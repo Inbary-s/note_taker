@@ -22,10 +22,27 @@ app.get("/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
   data.push(req.body);
   console.log(data);
-  fs.writeFile("./Develop/db/db.json", JSON.stringify(data), err =>
-    console.log(err)
-  );
+  fs.writeFile("./Develop/db/db.json", JSON.stringify(data), err =>{
+    // console.log(err)
+    if (err) throw err;
+      res.end();
+  });
 });
+
+app.get("/api/notes", function(req, res) {
+  return res.json(data);
+});
+// Display seleced note:
+app.get("/api/notes/:note", function(req, res){
+  const chosen = req.params.note;
+  console.log(chosen);
+  for (let i = 0; i < notes.length; i++) {
+    if (chosen === notes[i].routeName) {
+      return res.json(notes[i]);
+    }
+  }
+  return res.json();
+})
 
 app.listen(PORT, function() {
   console.log("Server is listening here: ", PORT);
