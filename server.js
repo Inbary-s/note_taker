@@ -3,7 +3,12 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 let app = express();
-
+const writeData = function(){
+  fs.writeFile("./Develop/db/db.json", JSON.stringify(data), err =>{
+    if (err) throw err;
+      res.end();
+});
+}
 let data = JSON.parse(fs.readFileSync("./Develop/db/db.json", "utf8"));
 console.log(data);
 
@@ -15,6 +20,7 @@ app.use(express.static("./Develop/public"));
 app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "./Develop/public/index.html"));
 });
+
 app.get("/notes", function(req, res) {
   res.sendFile(path.join(__dirname, "./Develop/public/notes.html"));
 });
@@ -22,27 +28,25 @@ app.get("/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
   data.push(req.body);
   console.log(data);
-  fs.writeFile("./Develop/db/db.json", JSON.stringify(data), err =>{
-    // console.log(err)
-    if (err) throw err;
-      res.end();
-  });
+  writeData();
+  return res.json(data);
 });
 
 app.get("/api/notes", function(req, res) {
   return res.json(data);
 });
-// Display seleced note:
-app.get("/api/notes/:note", function(req, res){
-  const chosen = req.params.note;
-  console.log(chosen);
-  for (let i = 0; i < notes.length; i++) {
-    if (chosen === notes[i].routeName) {
-      return res.json(notes[i]);
+
+app.delete("/api/notes/:id", function(req, res){
+  const id = req.params.id;
+  data = data.filter(function(note){
+    if (note.id === id){
+      return false;
     }
-  }
-  return res.json();
-})
+    return true;
+  });
+  writeData();
+  return res.json(data);
+});
 
 app.listen(PORT, function() {
   console.log("Server is listening here: ", PORT);
