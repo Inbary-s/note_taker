@@ -3,7 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 let app = express();
-const writeData = function(){
+const writeData = function(res){
   fs.writeFile("./Develop/db/db.json", JSON.stringify(data), err =>{
     if (err) throw err;
       res.end();
@@ -28,7 +28,7 @@ app.get("/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
   data.push(req.body);
   console.log(data);
-  writeData();
+  writeData(res);
   return res.json(data);
 });
 
@@ -44,7 +44,7 @@ app.delete("/api/notes/:id", function(req, res){
     }
     return true;
   });
-  writeData();
+  writeData(res);
   return res.json(data);
 });
 
