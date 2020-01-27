@@ -6,7 +6,7 @@ let app = express();
 const writeData = function(){
   fs.writeFile("./Develop/db/db.json", JSON.stringify(data), err =>{
     if (err) throw err;
-      res.end();
+      // res.end();
 });
 }
 let data = JSON.parse(fs.readFileSync("./Develop/db/db.json", "utf8"));
