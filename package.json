@@ -10,6 +10,6 @@
     "mysql": "^2.16.0"
   },
   "scripts": {
-    "start": "npm i"
+    "start": "node server.js"
   }
 }
